@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
-// import { useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { ErrorMessage } from "@hookform/error-message";
 
 type Auth = {
   email: string;
@@ -8,25 +9,26 @@ type Auth = {
 };
 
 export default function AuthPage() {
-  //   const { register, reset, handleSubmit } = useForm<Auth>();
-  const submitLogin = (event: any) => {
-    // const {email, password} = event
-    // console.log(email, password)
-    console.log(event);
-  };
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<Auth>();
 
-  const submitTestLogin = (event: any) => {
-    event.preventDefault();
-    console.log(event.target[0].value);
+  const authLogin = (event: Auth) => {
+    const { email, password } = event;
+    console.log(email, password);
   };
   return (
     <section className="mx-5 h-screen">
       <div className="pt-8">
         <h1 className="text-center text-2xl">Sign in</h1>
-        <form onSubmit={submitTestLogin}>
+        <form onSubmit={handleSubmit(authLogin)}>
           <div className="flex flex-col mt-4">
             <label htmlFor="email">Email Address</label>
             <input
+              {...register("email", { required: true })}
               type="email"
               id="email"
               placeholder="email@address.com"
@@ -36,6 +38,7 @@ export default function AuthPage() {
           <div className="flex flex-col mt-4">
             <label htmlFor="email">Password</label>
             <input
+              {...register("password", { required: true })}
               type="password"
               id="password"
               placeholder="******"
