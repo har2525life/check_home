@@ -2,6 +2,9 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
+import firebaseAuth from "../../../firebaseConfig";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 type Auth = {
   email: string;
@@ -9,6 +12,7 @@ type Auth = {
 };
 
 export default function AuthPage() {
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -19,6 +23,13 @@ export default function AuthPage() {
   const authLogin = (event: Auth) => {
     const { email, password } = event;
     console.log(email, password);
+    createUserWithEmailAndPassword(firebaseAuth, email, password).then(
+      (userCredential) => {
+        const user = userCredential.user;
+        console.log(user);
+        router.push("/main")
+      }
+    );
   };
   return (
     <section className="mx-5 h-screen">
